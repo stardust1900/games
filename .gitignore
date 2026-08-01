@@ -1,0 +1,54 @@
+# ---------- 依赖 ----------
+node_modules/
+.pnp
+.pnp.js
+
+# ---------- 构建产物 ----------
+dist/
+dist-ssr/
+build/
+*.local
+
+# ---------- Vite / TS 缓存 ----------
+*.tsbuildinfo
+vite.config.ts.timestamp-*
+
+# ---------- 日志 ----------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+debug.log
+
+# ---------- 环境变量（含密钥，切勿提交） ----------
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ---------- 编辑器 / IDE ----------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ---------- 操作系统 ----------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ---------- 覆盖率 / 测试 ----------
+coverage/
+
+# ---------- 类型检查缓存 (tsc) ----------
+*.tsbuildinfo

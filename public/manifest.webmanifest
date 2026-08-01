@@ -1,0 +1,17 @@
+{
+  "name": "脑力小站 · 益智游戏",
+  "short_name": "脑力小站",
+  "description": "猜词、2048、数独、扫雷。每日同题，连续打卡。",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
