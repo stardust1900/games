@@ -8,6 +8,10 @@ import { Game2048 } from '../games/game2048/Game2048'
 import { Sudoku } from '../games/sudoku/Sudoku'
 import { Minesweeper } from '../games/minesweeper/Minesweeper'
 import { SlidePuzzle } from '../games/slidepuzzle/SlidePuzzle'
+import { Nonogram } from '../games/nonogram/Nonogram'
+import { Memory } from '../games/memory/Memory'
+import { Klotski } from '../games/klotski/Klotski'
+import { Xiangqi } from '../games/xiangqi/Xiangqi'
 
 export default function App() {
   return (
@@ -21,6 +25,10 @@ export default function App() {
           <Route path="play/sudoku" element={<Sudoku />} />
           <Route path="play/minesweeper" element={<Minesweeper />} />
           <Route path="play/slidepuzzle" element={<SlidePuzzle />} />
+          <Route path="play/nonogram" element={<Nonogram />} />
+          <Route path="play/memory" element={<Memory />} />
+          <Route path="play/klotski" element={<Klotski />} />
+          <Route path="play/xiangqi" element={<Xiangqi />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

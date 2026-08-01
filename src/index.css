@@ -54,6 +54,14 @@ body {
   .text-gradient {
     @apply bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent;
   }
+  .help-content h3 {
+    @apply mb-1.5 mt-4 text-sm font-bold text-slate-800 first:mt-0 dark:text-slate-100;
+  }
+  .help-content p { @apply mb-2 leading-relaxed; }
+  .help-content ul { @apply mb-2 list-disc space-y-1 pl-5; }
+  .help-content ol { @apply mb-2 list-decimal space-y-1 pl-5; }
+  .help-content li { @apply leading-relaxed; }
+  .help-content strong { @apply font-semibold text-slate-800 dark:text-slate-100; }
 }
 
 /* 入场动画：轻微上浮淡入（用于卡片） */

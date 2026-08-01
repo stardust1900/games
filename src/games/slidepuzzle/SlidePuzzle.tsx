@@ -278,6 +278,25 @@ export function SlidePuzzle() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>点击与<strong>空格相邻</strong>的方块使其滑动，把数字 / 图案按顺序排好（空格最终落在右下角）。</p>
+          <h3>🕹️ 操作</h3>
+          <ul>
+            <li>点空格旁的方块即可滑动；只有<strong>相邻方块</strong>可动。</li>
+            <li>键盘也可用方向键操作（移动空格反方向）。</li>
+          </ul>
+          <h3>🎚️ 难度</h3>
+          <ul>
+            <li><strong>3×3</strong>：支持「自动求解」演示标准解法。</li>
+            <li><strong>4×4 / 5×5</strong>：挑战更高难度。</li>
+          </ul>
+          <h3>✅ 可解性</h3>
+          <p>每局都由已解状态<strong>打乱生成，保证有解</strong>。</p>
+          <p>会记录并保存你的<strong>最佳步数</strong>。</p>
+        </div>
+      }
       title="滑块拼图"
       subtitle="点击与空格相邻的方块滑动，把数字按顺序排好"
       onReset={() => newPuzzle()}

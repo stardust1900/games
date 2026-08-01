@@ -1090,6 +1090,26 @@ export function Multiplication() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>用射击玩法练乘法口决，<strong>连续答对 10 题</strong>即可达成「十连胜」。</p>
+          <h3>🕹️ 玩法</h3>
+          <ul>
+            <li>系统给出一个乘法（如 <strong>7 × 8</strong>），从选项中选出<strong>正确乘积</strong>。</li>
+            <li>选对 → 子弹命中得分；选错 → 脱靶，连胜中断需重来。</li>
+            <li>可用<strong>数字盘</strong>或下方选项作答。</li>
+          </ul>
+          <h3>🎚️ 模式</h3>
+          <ul>
+            <li><strong>乘积</strong>：给两个因数，求积。</li>
+            <li><strong>因数（交换）</strong>：给一个因数与积，求另一个因数。</li>
+          </ul>
+          <h3>🛠️ 准备</h3>
+          <p>开局可挑选<strong>武器 / 宠物 / 设备</strong>外观，纯属趣味点缀。</p>
+          <p>想重来随时点「重开」回到大厅。</p>
+        </div>
+      }
       title="乘法口决像素射击"
       subtitle="用乘法打出十连胜"
       wide

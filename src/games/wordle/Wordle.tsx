@@ -110,6 +110,29 @@ export function Wordle() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>在 <strong>6 次</strong>机会内猜出一个 5 字母英文单词。</p>
+          <h3>🕹️ 操作</h3>
+          <ul>
+            <li>电脑：直接敲键盘字母输入，回车提交，退格删除。</li>
+            <li>手机：点屏幕下方虚拟键盘；输入满 5 字母才能提交。</li>
+            <li>必须是<strong>词库内的单词</strong>，否则提示「不在词库」且不消耗次数。</li>
+          </ul>
+          <h3>🟩 颜色反馈</h3>
+          <ul>
+            <li><strong>绿 🟩</strong>：字母正确，且位置也对。</li>
+            <li><strong>黄 🟨</strong>：字母在答案里，但位置不对。</li>
+            <li><strong>灰 ⬛</strong>：答案里没有这个字母。</li>
+          </ul>
+          <h3>📅 每日挑战 & 分享</h3>
+          <ul>
+            <li>当天<strong>全站同题</strong>，方便和朋友比成绩。</li>
+            <li>通关后点「分享」复制无剧透 emoji 成绩，粘到聊天里炫耀。</li>
+          </ul>
+        </div>
+      }
       title="猜词"
       subtitle="6 次机会猜出 5 字母单词"
       daily

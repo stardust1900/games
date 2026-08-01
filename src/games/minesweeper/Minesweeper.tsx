@@ -145,6 +145,26 @@ export function Minesweeper() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>在不踩到地雷的前提下，<strong>翻开所有安全格子</strong>。</p>
+          <h3>🕹️ 操作</h3>
+          <ul>
+            <li><strong>左键 / 点按</strong>：翻开格子。</li>
+            <li><strong>右键 / 标记模式</strong>：插旗 🚩 标记你判断的地雷（顶部可切换标记模式，手机也能用）。</li>
+          </ul>
+          <h3>🔢 数字含义</h3>
+          <p>翻开后显示的数字，表示<strong>它周围 8 格中的地雷数量</strong>。据此推理哪些格安全。</p>
+          <h3>🛡️ 小提示</h3>
+          <ul>
+            <li><strong>首点必安全</strong>：第一次点击绝不会踩雷。</li>
+            <li>在已翻开数字上<strong>双击/双触</strong>（周围旗数已等于数字）可快速翻开剩余安全格。</li>
+          </ul>
+          <h3>🏆 胜利</h3>
+          <p>旗数等于地雷数，且所有安全格都已翻开即获胜。可选<strong>初级 / 中级</strong>难度。</p>
+        </div>
+      }
       title="扫雷"
       subtitle="左键翻开 · 右键/标记模式插旗"
       onShare={shareText}

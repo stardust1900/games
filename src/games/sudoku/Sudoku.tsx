@@ -143,6 +143,28 @@ export function Sudoku() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>在 9×9 格子里填入 <strong>1–9</strong>，使每行、每列、每个 3×3 宫都恰好包含 1–9 且不重复。</p>
+          <h3>🕹️ 操作</h3>
+          <ul>
+            <li>点选一个空格，再用<strong>键盘数字键</strong>或下方<strong>数字盘</strong>填入。</li>
+            <li>再次点选已填格可清除；点数字盘上的 ✏️ 可切换<strong>笔记模式</strong>（小字标记候选数）。</li>
+          </ul>
+          <h3>✅ 校验</h3>
+          <ul>
+            <li>填<strong>错</strong>的格子会标红提示。</li>
+            <li>每道题都保证<strong>唯一解</strong>。</li>
+          </ul>
+          <h3>📅 模式</h3>
+          <ul>
+            <li><strong>每日一题</strong>：全站当天同题，适合比拼。</li>
+            <li><strong>随机题</strong>：点「换一题」随时开新局。</li>
+          </ul>
+          <p>把盘面填满且无冲突即通关。</p>
+        </div>
+      }
       title="数独"
       subtitle={`${mode === 'daily' ? '每日一题' : '随机题'} · 剩余 ${board.flat().filter((v) => v === 0).length}`}
       daily={mode === 'daily'}

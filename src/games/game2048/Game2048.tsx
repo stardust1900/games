@@ -175,6 +175,26 @@ export function Game2048() {
 
   return (
     <GameShell
+      help={
+        <div>
+          <h3>🎯 目标</h3>
+          <p>滑动合并相同数字方块，凑出 <strong>2048</strong>（之后还能继续冲 4096、8192…）。</p>
+          <h3>🕹️ 操作</h3>
+          <ul>
+            <li>电脑：方向键或 <strong>WASD</strong> 控制方向。</li>
+            <li>手机：在棋盘上<strong>手指滑动</strong>。</li>
+          </ul>
+          <h3>📐 规则</h3>
+          <ul>
+            <li>同数字相撞合并为<strong>翻倍</strong>的方块。</li>
+            <li>每步所有方块朝同一方向滑到底；一次移动中已合并的方块<strong>本步不再二次合并</strong>。</li>
+            <li>每步结束后会随机在空格生成一个新的 <strong>2 或 4</strong>。</li>
+          </ul>
+          <h3>💀 结束</h3>
+          <p>棋盘填满且四个方向都无可合并的方块时，游戏结束。</p>
+          <p><strong>最高分</strong>会自动记录，挑战自我吧！</p>
+        </div>
+      }
       title="2048"
       subtitle="滑动合并相同数字，凑出 2048"
       onShare={shareText}
