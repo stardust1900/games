@@ -20,7 +20,6 @@ const GAMES: GameMeta[] = [
   { path: '/play/nonogram', title: '数织', desc: '按线索还原隐藏图案', icon: '🎨', tag: '逻辑', badge: 'bg-pink-100 text-pink-600 dark:bg-pink-500/20 dark:text-pink-300' },
   { path: '/play/memory', title: '记忆翻牌', desc: '翻牌配对，考验记忆力', icon: '🃏', tag: '记忆', badge: 'bg-teal-100 text-teal-600 dark:bg-teal-500/20 dark:text-teal-300' },
   { path: '/play/klotski', title: '华容道', desc: '移动棋子，助曹操突围', icon: '🧱', tag: '滑块', badge: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-300' },
-  { path: '/play/xiangqi', title: '象棋残局', desc: '残局对弈，将死电脑', icon: '🐴', tag: '策略', badge: 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-300' },
 ]
 
 const FEATURES = [
