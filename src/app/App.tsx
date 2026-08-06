@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './theme'
 import { Layout } from './Layout'
 import { Home } from '../pages/Home'
-import { Wordle } from '../games/wordle/Wordle'
 import { Multiplication } from '../games/multiplication/Multiplication'
 import { Game2048 } from '../games/game2048/Game2048'
 import { Sudoku } from '../games/sudoku/Sudoku'
@@ -18,7 +17,6 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="play/wordle" element={<Wordle />} />
           <Route path="play/multiplication" element={<Multiplication />} />
           <Route path="play/2048" element={<Game2048 />} />
           <Route path="play/sudoku" element={<Sudoku />} />

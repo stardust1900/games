@@ -11,7 +11,6 @@ interface GameMeta {
 }
 
 const GAMES: GameMeta[] = [
-  { path: '/play/wordle', title: '猜词', desc: '6 次机会猜出 5 字母单词', icon: '🔤', tag: '文字', badge: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300' },
   { path: '/play/multiplication', title: '九九乘法表', desc: '5 种思维玩转乘法口诀', icon: '✖️', tag: '数学', badge: 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300' },
   { path: '/play/2048', title: '2048', desc: '滑动合并，凑出 2048', icon: '🔢', tag: '数字', badge: 'bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-300' },
   { path: '/play/sudoku', title: '数独', desc: '9×9 逻辑填空，每日一题', icon: '🔢', tag: '逻辑', badge: 'bg-sky-100 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300' },
