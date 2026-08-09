@@ -12,7 +12,6 @@ import {
   canStep,
   generate,
   isWin,
-  scrambleSolution,
   step,
   targetCells,
 } from './klotskiData'
@@ -24,11 +23,13 @@ function fmt(t: number) {
 export function Klotski() {
   const [lvlIdx, setLvlIdx] = useState(0)
   const level = LEVELS[lvlIdx]
-  const gen = useMemo(() => generate(level.seed, level.turns), [level])
-  const initBlocks = gen.blocks
-  const levelSolution = useMemo(() => scrambleSolution(gen.moves), [gen])
 
-  const [blocks, setBlocks] = useState<Block[]>(initBlocks)
+  const [initBlocks, setInitBlocks] = useState<Block[]>([])
+  const [minSteps, setMinSteps] = useState(0)
+  const [levelSolution, setLevelSolution] = useState<KMove[]>([])
+  const [genLoading, setGenLoading] = useState(true)
+
+  const [blocks, setBlocks] = useState<Block[]>([])
   const [selected, setSelected] = useState<number | null>(null)
   const [past, setPast] = useState<Block[][]>([])
   const [steps, setSteps] = useState(0)
@@ -46,15 +47,38 @@ export function Klotski() {
   const [playing, setPlaying] = useState(false)
   const [playPos, setPlayPos] = useState(0)
 
+  // 异步生成关卡（BFS 展开可能耗时，避免阻塞界面）
   useEffect(() => {
-    setBlocks(initBlocks)
+    let cancelled = false
+    setGenLoading(true)
+    setBlocks([])
     setSelected(null)
     setPast([])
     setSteps(0)
     setStarted(false)
     setSolved(false)
     setElapsed(0)
+    setSolution(null)
+    setSolutionBase(null)
+    setSolutionOpen(false)
+    setPlaying(false)
+    setPlayPos(0)
     setBest(getJSON<number | null>(bestKey, null))
+    // 用 setTimeout 让出主线程，先渲染 loading 再开始重计算
+    const t = setTimeout(() => {
+      const gen = generate(level)
+      if (cancelled) return
+      setInitBlocks(gen.blocks)
+      setMinSteps(gen.steps)
+      // gen.moves 已是从初始局面到通关的最短解
+      setLevelSolution(gen.moves)
+      setBlocks(gen.blocks)
+      setGenLoading(false)
+    }, 30)
+    return () => {
+      cancelled = true
+      clearTimeout(t)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lvlIdx])
 
@@ -81,7 +105,7 @@ export function Klotski() {
   }, [playing, playPos, solution])
 
   useEffect(() => {
-    if (solved) return
+    if (solved || blocks.length === 0) return
     if (isWin(blocks)) {
       setSolved(true)
       markPlayedToday()
@@ -106,7 +130,7 @@ export function Klotski() {
   }, [selected, blocks])
 
   function clickCell(x: number, y: number) {
-    if (solved || playing) return
+    if (solved || playing || blocks.length === 0) return
     // 点到方块：选中 / 取消 / 单方向自动走
     const g = blocks.reduce<(number | null)[][]>((acc, b) => {
       for (let yy = 0; yy < b.h; yy++) for (let xx = 0; xx < b.w; xx++) acc[b.y + yy][b.x + xx] = b.id
@@ -159,12 +183,13 @@ export function Klotski() {
   }
 
   function reset() {
+    if (genLoading) return
     setPlaying(false)
     setSolution(null)
     setSolutionBase(null)
     setSolutionOpen(false)
     setPlayPos(0)
-    setBlocks(gen.blocks)
+    setBlocks(initBlocks)
     setSelected(null)
     setPast([])
     setSteps(0)
@@ -175,9 +200,9 @@ export function Klotski() {
 
   // 解法即「初始打乱的逆序反向」，由生成器直接给出，即时可得
   function showSolution() {
-    if (playing) return
+    if (playing || genLoading) return
     setSolution(levelSolution)
-    setSolutionBase(gen.blocks)
+    setSolutionBase(initBlocks)
     setSolutionOpen(true)
   }
 
@@ -219,7 +244,7 @@ export function Klotski() {
             <li>点「<strong>答案</strong>」查看最短解法，「<strong>播放</strong>」可在盘面逐步演示。</li>
             <li>通关后记录<strong>步数</strong>并保存最佳。</li>
           </ul>
-          <p>内置多个经典布局（如「横刀立马」），越往后越烧脑。</p>
+          <p>内置多个经典布局（如「横刀立马」），越往后最少步数越多、越烧脑（每关最少步数见顶部提示）。</p>
         </div>
       }
       title="华容道"
@@ -252,13 +277,28 @@ export function Klotski() {
           <button onClick={undo} disabled={!past.length || playing} className="btn px-2.5 py-1 text-sm disabled:opacity-40">
             撤销
           </button>
+          <button
+            onClick={reset}
+            disabled={genLoading || playing}
+            className="btn px-2.5 py-1 text-sm disabled:opacity-40"
+          >
+            重新开始
+          </button>
           <span className="ml-auto text-sm text-slate-500 dark:text-slate-400">
-            步数 {steps} · ⏱ {fmt(elapsed)} · 最佳 {best != null ? `${best}步` : '—'}
+            步数 {steps} · 最少 {minSteps} 步 · ⏱ {fmt(elapsed)} · 最佳 {best != null ? `${best}步` : '—'}
           </span>
         </div>
       }
     >
       <div className="mx-auto w-full max-w-[340px]">
+        {genLoading ? (
+          <div className="relative grid aspect-[4/5] w-full place-items-center rounded-xl bg-slate-300/60 text-slate-500 dark:bg-slate-700/60 dark:text-slate-300">
+            <div className="flex flex-col items-center gap-2">
+              <span className="animate-spin text-2xl">⏳</span>
+              <span className="text-sm">正在生成关卡…</span>
+            </div>
+          </div>
+        ) : (
         <div className="relative aspect-[4/5] w-full rounded-xl bg-slate-300/60 p-1 dark:bg-slate-700/60">
           {/* 底层空格（捕捉点击） */}
           <div className="absolute inset-1 grid grid-cols-4 grid-rows-5 gap-1">
@@ -310,6 +350,7 @@ export function Klotski() {
             </span>
           </div>
         </div>
+        )}
 
         {/* 出口说明 */}
         <div className="mt-2 flex flex-col items-center gap-0.5">
