@@ -82,7 +82,7 @@ export function GameShell({
           </button>
         )}
         {extra}
-        {onShare && <ShareButton getShareText={onShare} />}
+        {onShare && <ShareButton title={title} getShareText={onShare} />}
       </div>
 
       <div className={cn(!wide && 'card p-3 sm:p-4')}>{children}</div>
