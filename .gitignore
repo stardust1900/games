@@ -52,3 +52,6 @@ coverage/
 
 # ---------- 类型检查缓存 (tsc) ----------
 *.tsbuildinfo
+
+.codebuddy
+.workbuddy
