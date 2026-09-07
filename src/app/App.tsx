@@ -10,6 +10,7 @@ import { SlidePuzzle } from '../games/slidepuzzle/SlidePuzzle'
 import { Nonogram } from '../games/nonogram/Nonogram'
 import { Memory } from '../games/memory/Memory'
 import { Klotski } from '../games/klotski/Klotski'
+import { TwentyFour } from '../games/twentyfour/TwentyFour'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="play/nonogram" element={<Nonogram />} />
           <Route path="play/memory" element={<Memory />} />
           <Route path="play/klotski" element={<Klotski />} />
+          <Route path="play/twentyfour" element={<TwentyFour />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

@@ -19,6 +19,7 @@ const GAMES: GameMeta[] = [
   { path: '/play/nonogram', title: '数织', desc: '按线索还原隐藏图案', icon: '🎨', tag: '逻辑', badge: 'bg-pink-100 text-pink-600 dark:bg-pink-500/20 dark:text-pink-300' },
   { path: '/play/memory', title: '记忆翻牌', desc: '翻牌配对，考验记忆力', icon: '🃏', tag: '记忆', badge: 'bg-teal-100 text-teal-600 dark:bg-teal-500/20 dark:text-teal-300' },
   { path: '/play/klotski', title: '华容道', desc: '移动棋子，助曹操突围', icon: '🧱', tag: '滑块', badge: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-300' },
+  { path: '/play/twentyfour', title: '算24点', desc: '四张牌凑出 24，烧脑运算', icon: '🃏', tag: '数学', badge: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300' },
 ]
 
 const FEATURES = [
