@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GameShell } from '../../components/GameShell'
 import { ShareButton } from '../../components/ShareButton'
 import { markPlayedToday } from '../../lib/streak'
@@ -22,11 +22,34 @@ import {
    类型与常量
    ═══════════════════════════════════════════ */
 
+type ExprNode =
+  | { n: string } // 叶子：数字
+  | { l: ExprNode; op: string; r: ExprNode } // 二元运算
+
 interface Card {
   id: number
   value: Frac
-  expr: string // 展示用表达式
+  expr: ExprNode // 表达式结构（用于按优先级生成最少括号的展示）
   computed: boolean // true=运算得到的中间牌；false=初始数字牌
+}
+
+// 按运算符优先级生成「最少括号」的展示式，保证与实际运算一致
+const PREC: Record<string, number> = { '+': 1, '-': 1, '×': 2, '÷': 2 }
+function childNeedsParen(child: ExprNode, parentOp: string, isLeft: boolean): boolean {
+  if ('n' in child) return false
+  const pc = PREC[child.op]
+  const pp = PREC[parentOp]
+  if (pc > pp) return false
+  if (pc < pp) return true
+  return !isLeft // 同级时左操作数无需括号，右操作数需括号（左结合）
+}
+function renderExpr(e: ExprNode): string {
+  if ('n' in e) return e.n
+  const l = renderExpr(e.l)
+  const r = renderExpr(e.r)
+  const ls = childNeedsParen(e.l, e.op, true) ? `(${l})` : l
+  const rs = childNeedsParen(e.r, e.op, false) ? `(${r})` : r
+  return `${ls} ${e.op} ${rs}`
 }
 
 const OPS: { sym: string; label: string; calc: (a: Frac, b: Frac) => Frac | null }[] = [
@@ -37,12 +60,12 @@ const OPS: { sym: string; label: string; calc: (a: Frac, b: Frac) => Frac | null
 ]
 
 let nextId = 1
-function makeCard(value: Frac, expr: string, computed: boolean): Card {
+function makeCard(value: Frac, expr: ExprNode, computed: boolean): Card {
   return { id: nextId++, value, expr, computed }
 }
 
 function numsToCards(nums: number[]): Card[] {
-  return nums.map((v) => makeCard(frac(v, 1), `${v}`, false))
+  return nums.map((v) => makeCard(frac(v, 1), { n: `${v}` }, false))
 }
 
 function fmtTime(s: number): string {
@@ -63,8 +86,9 @@ interface Snapshot {
 }
 
 export function TwentyFour() {
-  const [original, setOriginal] = useState<number[]>(() => generateRandomPuzzle())
-  const [cards, setCards] = useState<Card[]>(() => numsToCards(generateRandomPuzzle()))
+  const initial = useMemo(() => generateRandomPuzzle(), [])
+  const [original, setOriginal] = useState<number[]>(initial)
+  const [cards, setCards] = useState<Card[]>(() => numsToCards(initial))
   const [current, setCurrent] = useState<number | null>(null) // 当前「持有」的牌
   const [pendingOp, setPendingOp] = useState<string | null>(null) // 待应用的运算符
   const [history, setHistory] = useState<Snapshot[]>([])
@@ -139,7 +163,7 @@ export function TwentyFour() {
       flash('不能除以 0')
       return
     }
-    const newCard = makeCard(r, `${a.expr} ${pendingOp} ${b.expr}`, true)
+    const newCard = makeCard(r, { l: a.expr, op: pendingOp, r: b.expr }, true)
     const nextCards = cards
       .filter((c) => c.id !== a.id && c.id !== b.id)
       .concat(newCard)
@@ -252,6 +276,7 @@ export function TwentyFour() {
             <li>再<strong>点一个运算符</strong>（也可直接按键盘 + - * /）。</li>
             <li>然后<strong>点下一张牌</strong>，两张牌合并成一张新牌（如先点 7 → 点「−」→ 点 3，得到 4）。</li>
             <li>运算结果会自动保持选中，可<strong>继续点运算符 + 下一张牌</strong>一路合并，直到剩一张且等于 24。</li>
+            <li>想做出带括号的式子（如 <code>10 - (6 - 4)</code>），先点 6 → − → 4 算出括号里的部分，再点 10 → − → 该结果继续合并即可。</li>
           </ul>
           <h3>🎨 卡片颜色</h3>
           <ul>
@@ -282,7 +307,7 @@ export function TwentyFour() {
                 onClick={() => onCardClick(c.id)}
                 disabled={solved}
                 className={cn(
-                  'group relative flex aspect-[3/4] flex-col items-center justify-center rounded-2xl border-2 p-2 shadow-sm transition active:scale-95',
+                  'group relative flex aspect-square flex-col items-center justify-center rounded-2xl border-2 p-2 shadow-sm transition active:scale-95',
                   c.computed
                     ? 'border-transparent bg-gradient-to-br from-indigo-500 to-purple-500 text-white'
                     : 'border-slate-200 bg-white text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100',
@@ -299,12 +324,12 @@ export function TwentyFour() {
                 <span className="text-3xl font-extrabold tabular-nums">
                   {fracToString(c.value)}
                 </span>
-                {c.expr.includes(' ') && (
+                {c.computed && (
                   <span className={cn(
                     'mt-1 line-clamp-2 text-center text-[10px] leading-tight',
                     c.computed ? 'text-white/80' : 'text-slate-400 dark:text-slate-500',
                   )}>
-                    {c.expr}
+                    {renderExpr(c.expr)}
                   </span>
                 )}
                 {isCurrent && pendingOp && (
@@ -345,9 +370,9 @@ export function TwentyFour() {
           {solved
             ? '已通关'
             : pendingOp && currentCard
-              ? `${currentCard.expr} ${pendingOp} ? → 再点一张牌`
+              ? `${renderExpr(currentCard.expr)} ${pendingOp} ? → 再点一张牌`
               : currentCard
-                ? `已选 ${currentCard.expr}，点运算符`
+                ? `已选 ${renderExpr(currentCard.expr)}，点运算符`
                 : '先点一张数字牌开始'}
         </p>
 
