@@ -113,15 +113,16 @@ export const DIRS: [number, number][] = [
 ]
 
 // 预定义固定布局（曹操位于棋盘上方，被将/兵围困）。
-// 所有布局已用 BFS 预先验证真实最短通关步数，确保至少 10 步，且前 3 关 10 步、后 5 关 26~28 步。
+// 所有布局已用 BFS 验证：8 关棋盘两两不同，且真实最短通关步数严格递增
+// （9 → 10 → 12 → 18 → 21 → 24 → 26 → 28 步），保证一关比一关难。
 export const LEVELS: Level[] = [
   {
     id: 'kl-hdlm',
     name: '横刀立马',
     seed: 'hdlm',
     turns: 0,
-    minSteps: 10,
-    grid: ['SGGS', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
+    minSteps: 9,
+    grid: ['G.S.', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
   },
   {
     id: 'kl-zhdd',
@@ -129,55 +130,55 @@ export const LEVELS: Level[] = [
     seed: 'zhdd',
     turns: 0,
     minSteps: 10,
-    grid: ['S.GS', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
+    grid: ['G..S', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
   },
   {
     id: 'kl-qtjb',
     name: '齐头并进',
     seed: 'qtjb',
     turns: 0,
-    minSteps: 10,
-    grid: ['SG.S', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
+    minSteps: 12,
+    grid: ['G.SS', 'V..V', 'VCCV', 'VCCV', 'VSSV'],
   },
   {
     id: 'kl-bfsl',
     name: '兵分三路',
     seed: 'bfsl',
     turns: 0,
-    minSteps: 26,
-    grid: ['VS.S', 'VCCV', 'VCCV', 'VGGV', 'S..S'],
+    minSteps: 18,
+    grid: ['VS..', 'VCCV', 'VCCV', 'VGGV', '...S'],
   },
   {
     id: 'kl-ysxl',
     name: '雨声淅沥',
     seed: 'ysxl',
     turns: 0,
-    minSteps: 26,
-    grid: ['S.SV', 'VCCV', 'VCCV', 'VGGV', 'S..S'],
+    minSteps: 21,
+    grid: ['S...', 'VCCV', 'VCCV', 'VGGV', 'S..S'],
   },
   {
     id: 'kl-hsqj',
     name: '横扫千军',
     seed: 'hsqj',
     turns: 0,
-    minSteps: 28,
-    grid: ['VS.S', 'VCCV', 'VCCV', 'VGGV', '..SS'],
+    minSteps: 24,
+    grid: ['SS..', 'VCCV', 'VCCV', 'VGGV', 'S..S'],
   },
   {
     id: 'kl-blcy',
     name: '兵临曹营',
     seed: 'blcy',
     turns: 0,
-    minSteps: 28,
-    grid: ['S.SV', 'VCCV', 'VCCV', 'VGGV', 'SS..'],
+    minSteps: 26,
+    grid: ['SS.V', 'VCCV', 'VCCV', 'VGGV', 'S.S.'],
   },
   {
     id: 'kl-dqpm',
     name: '单枪匹马',
     seed: 'dqpm',
     turns: 0,
-    minSteps: 27,
-    grid: ['S.SV', 'VCCV', 'VCCV', 'VGGV', 'S.S.'],
+    minSteps: 28,
+    grid: ['SS..', 'VCCV', 'VCCV', 'VGGV', 'S.SS'],
   },
 ]
 

@@ -21,8 +21,11 @@ function fmt(t: number) {
 }
 
 export function Klotski() {
-  const [lvlIdx, setLvlIdx] = useState(0)
+  // 续玩：从已解锁的最高关卡开始（首玩为第 1 关）
+  const [lvlIdx, setLvlIdx] = useState<number>(() => getJSON('klotski:unlocked', 0))
   const level = LEVELS[lvlIdx]
+  // 已解锁的最高关卡下标（通关当前关后解锁下一关，不可跳选）
+  const [unlocked, setUnlocked] = useState<number>(() => getJSON('klotski:unlocked', 0))
 
   const [initBlocks, setInitBlocks] = useState<Block[]>([])
   const [minSteps, setMinSteps] = useState(0)
@@ -112,6 +115,17 @@ export function Klotski() {
       if (best == null || steps < best) {
         setJSON(bestKey, steps)
         setBest(steps)
+      }
+      // 通关当前关后解锁下一关（持久化），使关卡只能顺序推进、不可跳选
+      const next = lvlIdx + 1
+      if (next < LEVELS.length) {
+        setUnlocked((u) => {
+          if (next > u) {
+            setJSON('klotski:unlocked', next)
+            return next
+          }
+          return u
+        })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,8 +273,8 @@ export function Klotski() {
             className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800"
           >
             {LEVELS.map((l, i) => (
-              <option key={l.id} value={i}>
-                {l.name}
+              <option key={l.id} value={i} disabled={i > unlocked}>
+                {(i > unlocked ? '🔒 ' : '') + `第 ${i + 1} 关 · ${l.name}`}
               </option>
             ))}
           </select>
@@ -361,10 +375,24 @@ export function Klotski() {
         </div>
 
         {solved && (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-            🎉 曹操成功突围！用了 {steps} 步 · {fmt(elapsed)}
-            {best === steps && ' · 步数新纪录！'}
-          </div>
+          <>
+            <div className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+              🎉 曹操成功突围！用了 {steps} 步 · {fmt(elapsed)}
+              {best === steps && ' · 步数新纪录！'}
+            </div>
+            {lvlIdx < LEVELS.length - 1 ? (
+              <button
+                onClick={() => setLvlIdx((i) => i + 1)}
+                className="btn mt-3 w-full justify-center py-2 text-base"
+              >
+                进入下一关 →
+              </button>
+            ) : (
+              <div className="mt-3 rounded-xl bg-emerald-50 p-3 text-center text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                🏆 已通关全部 {LEVELS.length} 关，恭喜！
+              </div>
+            )}
+          </>
         )}
 
         {/* 解法面板 */}
